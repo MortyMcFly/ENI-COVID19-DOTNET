@@ -77,7 +77,8 @@ namespace TPPizzas.Controllers
                 return RedirectToAction("Index");
             }
 
-            var pizzaViewModel = new PizzaViewModel { Pizza = pizza, Ingredients = Ingredients, Pates = Pates };
+            var pizzaViewModel = 
+                new PizzaViewModel { Pizza = pizza, Ingredients = Ingredients, Pates = Pates, IdSelectedIngredients = pizza.Ingredients.Select(i => i.Id).ToList() };
             return View(pizzaViewModel);
         }
 
