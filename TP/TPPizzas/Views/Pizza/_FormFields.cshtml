@@ -1,0 +1,25 @@
+﻿@model Models.PizzaViewModel
+
+<div class="form-group">
+    @Html.LabelFor(model => model.Pizza.Nom, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.Pizza.Nom, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Pizza.Nom, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.Pates, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.DropDownListFor(model => model.IdSelectedPate, Model.Pates.Select(p => new SelectListItem { Value = p.Id.ToString(), Text = p.Nom }), htmlAttributes: new { @class = "custom-select" })
+        @Html.ValidationMessageFor(model => model.Pates, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.Ingredients, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.ListBoxFor(model => model.IdSelectedIngredients, Model.Ingredients.Select(i => new SelectListItem { Value = i.Id.ToString(), Text = i.Nom }), htmlAttributes: new { @class = "custom-select" })
+        @Html.ValidationMessageFor(model => model.Ingredients, "", new { @class = "text-danger" })
+    </div>
+</div>

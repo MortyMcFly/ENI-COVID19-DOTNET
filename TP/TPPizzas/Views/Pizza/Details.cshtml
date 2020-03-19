@@ -1,0 +1,14 @@
+﻿@model Models.Pizza
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div>
+    @Html.Partial("_Details", Model)
+</div>
+
+<p>
+    @Html.ActionLink("Editer", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Retour à la liste", "Index")
+</p>
