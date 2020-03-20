@@ -47,20 +47,29 @@ namespace TPPizzas.Controllers
         {
             try
             {
-                Pizza pizza = new Pizza
+                if (ModelState.IsValid)
                 {
-                    Id = pizzas.OrderByDescending(p => p.Id).Select(p => p.Id).FirstOrDefault() + 1,
-                    Pate = Pates.FirstOrDefault(p => p.Id == pizzaViewModel.IdSelectedPate),
-                    Nom = pizzaViewModel.Pizza.Nom
-                };
-                foreach (var idIngredient in pizzaViewModel.IdSelectedIngredients)
-                {
-                    pizza.Ingredients.Add(Ingredients.FirstOrDefault(i => i.Id == idIngredient));
+                    if (ValidatePizza(pizzaViewModel))
+                    {
+                        Pizza pizza = new Pizza
+                        {
+                            Id = pizzas.OrderByDescending(p => p.Id).Select(p => p.Id).FirstOrDefault() + 1,
+                            Pate = Pates.FirstOrDefault(p => p.Id == pizzaViewModel.IdSelectedPate),
+                            Nom = pizzaViewModel.Pizza.Nom
+                        };
+                        foreach (var idIngredient in pizzaViewModel.IdSelectedIngredients)
+                        {
+                            pizza.Ingredients.Add(Ingredients.FirstOrDefault(i => i.Id == idIngredient));
+                        }
+
+                        pizzas.Add(pizza);
+
+                        return RedirectToAction("Index");
+                    }
                 }
-
-                pizzas.Add(pizza);
-
-                return RedirectToAction("Index");
+                pizzaViewModel.Ingredients = Ingredients;
+                pizzaViewModel.Pates = Pates;
+                return View(pizzaViewModel);
             }
             catch
             {
@@ -88,21 +97,30 @@ namespace TPPizzas.Controllers
         {
             try
             {
-                var pizza = Pizzas.FirstOrDefault(p => p.Id == pizzaViewModel.Pizza.Id);
-                if (pizza == null)
+                if (ModelState.IsValid)
                 {
-                    return RedirectToAction("Index");
+                    if (ValidatePizza(pizzaViewModel))
+                    {
+                        var pizza = Pizzas.FirstOrDefault(p => p.Id == pizzaViewModel.Pizza.Id);
+                        if (pizza == null)
+                        {
+                            return RedirectToAction("Index");
+                        }
+
+                        pizza.Ingredients.Clear();
+                        foreach (var idIngredient in pizzaViewModel.IdSelectedIngredients)
+                        {
+                            pizza.Ingredients.Add(Ingredients.First(i => i.Id == idIngredient));
+                        }
+
+                        pizza.Pate = Pates.First(p => p.Id == pizzaViewModel.IdSelectedPate);
+
+                        return RedirectToAction("Index");
+                    }
                 }
-
-                pizza.Ingredients.Clear();
-                foreach (var idIngredient in pizzaViewModel.IdSelectedIngredients)
-                {
-                    pizza.Ingredients.Add(Ingredients.First(i => i.Id == idIngredient));
-                }
-
-                pizza.Pate = Pates.First(p => p.Id == pizzaViewModel.IdSelectedPate);
-
-                return RedirectToAction("Index");
+                pizzaViewModel.Ingredients = Ingredients;
+                pizzaViewModel.Pates = Pates;
+                return View(pizzaViewModel);
             }
             catch
             {
@@ -140,6 +158,39 @@ namespace TPPizzas.Controllers
             {
                 return View();
             }
+        }
+
+        private bool ValidatePizza(PizzaViewModel pizzaViewModel)
+        {
+            bool isValid = true;
+
+            if (Pizzas.Any(p => p.Nom.ToUpper() == pizzaViewModel.Pizza.Nom.ToUpper()))
+            {
+                isValid = false;
+                ModelState.AddModelError("", "Cette pizza existe déjà");
+            }
+
+            if (pizzaViewModel.IdSelectedIngredients.Count() < 2 || pizzaViewModel.IdSelectedIngredients.Count() > 5)
+            {
+                isValid = false;
+                ModelState.AddModelError("", "Nombre d'ingrédients incorrect");
+            }
+
+            foreach (Pizza pizza in Pizzas)
+            {
+                if (pizza.Ingredients.Select(i => i.Id).SequenceEqual(pizzaViewModel.IdSelectedIngredients))
+                {
+                    isValid = false;
+                    ModelState.AddModelError("", "Cette composition existe déjà");
+                }
+            }
+
+            if (!Pates.Any(p => p.Id == pizzaViewModel.IdSelectedPate))
+            {
+                isValid = false;
+                ModelState.AddModelError("", "Une pizza doit avoir une pate");
+            }
+            return isValid;
         }
     }
 }
