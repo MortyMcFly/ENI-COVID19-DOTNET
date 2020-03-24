@@ -22,5 +22,7 @@ namespace TPDojo.Data
         public System.Data.Entity.DbSet<Models.Samourai> Samourais { get; set; }
 
         public System.Data.Entity.DbSet<Models.Arme> Armes { get; set; }
+
+        public System.Data.Entity.DbSet<Models.ArtMartial> ArtsMartiaux { get; set; }
     }
 }

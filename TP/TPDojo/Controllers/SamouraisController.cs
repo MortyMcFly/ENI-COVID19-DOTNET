@@ -39,7 +39,9 @@ namespace TPDojo.Controllers
         // GET: Samourais/Create
         public ActionResult Create()
         {
-            var svm = new SamouraiViewModel { Armes = db.Armes.ToList() };
+            var svm = new SamouraiViewModel();
+            svm.Armes = db.Armes.Except(db.Samourais.Select(s => s.Arme)).ToList();
+            svm.ArtsMartiaux = db.ArtsMartiaux.ToList();
             return View(svm);
         }
 
@@ -56,12 +58,19 @@ namespace TPDojo.Controllers
                 {
                     svm.Samourai.Arme = db.Armes.FirstOrDefault(a => a.Id == svm.IdSelectedArme);
                 }
+                if (svm.IdSelectedArtMartiaux.Count() > 0)
+                {
+                    svm.IdSelectedArtMartiaux.ForEach(idam => {
+                        svm.Samourai.ArtsMartiaux.Add(db.ArtsMartiaux.FirstOrDefault(am => am.Id == idam));
+                    });
+                }
 
                 db.Samourais.Add(svm.Samourai);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            svm.Armes = db.Armes.ToList();
+            svm.Armes = db.Armes.Except(db.Samourais.Select(s => s.Arme)).ToList();
+            svm.ArtsMartiaux = db.ArtsMartiaux.ToList();
             return View(svm);
         }
 
@@ -77,10 +86,18 @@ namespace TPDojo.Controllers
             {
                 return HttpNotFound();
             }
-            var svm = new SamouraiViewModel { Samourai = samourai, Armes = db.Armes.ToList() };
+            var svm = new SamouraiViewModel();
+            svm.Samourai = samourai;
+            svm.Armes = db.Armes.Except(db.Samourais.Select(s => s.Arme)).ToList();
+            svm.ArtsMartiaux = db.ArtsMartiaux.ToList();
             if (samourai.Arme != null)
             {
+                svm.Armes.Add(samourai.Arme);
                 svm.IdSelectedArme = samourai.Arme.Id;
+            }
+            if (samourai.ArtsMartiaux != null)
+            {
+                svm.IdSelectedArtMartiaux = samourai.ArtsMartiaux.Select(am => am.Id).ToList();
             }
             return View(svm);
         }
@@ -100,12 +117,24 @@ namespace TPDojo.Controllers
                 oldSamourai.Arme = null;
                 if (svm.IdSelectedArme.HasValue)
                 {
-                    oldSamourai.Arme = db.Armes.FirstOrDefault(a => a.Id == svm.IdSelectedArme.Value);
+                    oldSamourai.Arme = db.Armes.FirstOrDefault(a => a.Id == svm.IdSelectedArme);
+                }
+                oldSamourai.ArtsMartiaux.Clear();
+                if (svm.IdSelectedArtMartiaux.Count() > 0)
+                {
+                    svm.IdSelectedArtMartiaux.ForEach(idam => {
+                        oldSamourai.ArtsMartiaux.Add(db.ArtsMartiaux.FirstOrDefault(am => am.Id == idam));
+                    });
                 }
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            svm.Armes = db.Armes.ToList();
+            svm.Armes = db.Armes.Except(db.Samourais.Select(s => s.Arme)).ToList();
+            svm.ArtsMartiaux = db.ArtsMartiaux.ToList();
+            if (svm.Samourai.Arme != null)
+            {
+                svm.Armes.Add(svm.Samourai.Arme);
+            }
             return View(svm);
         }
 

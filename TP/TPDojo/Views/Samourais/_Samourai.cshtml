@@ -28,5 +28,20 @@
             @Html.DisplayFor(model => model.Arme.Nom)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.ArtsMartiaux)
+        </dt>
+
+        <dd>
+            @Html.ListBoxFor(model => model.ArtsMartiaux, Model.ArtsMartiaux.Select(am => new SelectListItem { Value = am.Id.ToString(), Text = am.Nom }), new { htmlAttributes = new { @class = "form-control" } })
+        </dd>
+
+        <dt>
+            Potentiel
+        </dt>
+
+        <dd>
+            @((Model.Force + Model.Arme.Degats) * (Model.ArtsMartiaux.Count + 1))
+        </dd>
     </dl>
 </div>

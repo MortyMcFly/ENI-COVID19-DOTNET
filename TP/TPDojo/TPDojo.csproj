@@ -127,14 +127,20 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ArmesController.cs" />
+    <Compile Include="Controllers\ArtsMartiauxController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SamouraisController.cs" />
     <Compile Include="Data\DojoContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202003240936206_UpdateDbAddArtMartialModel.cs" />
+    <Compile Include="Migrations\202003240936206_UpdateDbAddArtMartialModel.Designer.cs">
+      <DependentUpon>202003240936206_UpdateDbAddArtMartialModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Arme.cs" />
+    <Compile Include="Models\ArtMartial.cs" />
     <Compile Include="Models\Samourai.cs" />
     <Compile Include="Models\SamouraiViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -186,6 +192,11 @@
     <Content Include="Views\Armes\Edit.cshtml" />
     <Content Include="Views\Armes\Index.cshtml" />
     <Content Include="Views\Samourais\_Samourai.cshtml" />
+    <Content Include="Views\ArtsMartiaux\Create.cshtml" />
+    <Content Include="Views\ArtsMartiaux\Delete.cshtml" />
+    <Content Include="Views\ArtsMartiaux\Details.cshtml" />
+    <Content Include="Views\ArtsMartiaux\Edit.cshtml" />
+    <Content Include="Views\ArtsMartiaux\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -202,6 +213,11 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202003240936206_UpdateDbAddArtMartialModel.resx">
+      <DependentUpon>202003240936206_UpdateDbAddArtMartialModel.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
